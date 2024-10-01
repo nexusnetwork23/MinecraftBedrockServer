@@ -5,7 +5,7 @@
 # Resource Pack Guide: https://jamesachambers.com/minecraft-bedrock-server-resource-pack-guide/
 #
 # To run the setup script use:
-# curl https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/SetupMinecraft.sh | bash
+# curl https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/SetupMinecraft.sh | bash
 #
 # GitHub Repository: https://github.com/TheRemote/MinecraftBedrockServer
 
@@ -56,7 +56,7 @@ Update_Scripts() {
 
   # Download start.sh from repository
   echo "Grabbing start.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o start.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/start.sh
+  curl -H "Accept-Encoding: identity" -L -o start.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/start.sh
   chmod +x start.sh
   sed -i "s:dirname:$DirName:g" start.sh
   sed -i "s:servername:$ServerName:g" start.sh
@@ -65,7 +65,7 @@ Update_Scripts() {
 
   # Download stop.sh from repository
   echo "Grabbing stop.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o stop.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/stop.sh
+  curl -H "Accept-Encoding: identity" -L -o stop.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/stop.sh
   chmod +x stop.sh
   sed -i "s:dirname:$DirName:g" stop.sh
   sed -i "s:servername:$ServerName:g" stop.sh
@@ -74,7 +74,7 @@ Update_Scripts() {
 
   # Download restart.sh from repository
   echo "Grabbing restart.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o restart.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/restart.sh
+  curl -H "Accept-Encoding: identity" -L -o restart.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/restart.sh
   chmod +x restart.sh
   sed -i "s:dirname:$DirName:g" restart.sh
   sed -i "s:servername:$ServerName:g" restart.sh
@@ -83,7 +83,7 @@ Update_Scripts() {
 
   # Download fixpermissions.sh from repository
   echo "Grabbing fixpermissions.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o fixpermissions.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/fixpermissions.sh
+  curl -H "Accept-Encoding: identity" -L -o fixpermissions.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/fixpermissions.sh
   chmod +x fixpermissions.sh
   sed -i "s:dirname:$DirName:g" fixpermissions.sh
   sed -i "s:servername:$ServerName:g" fixpermissions.sh
@@ -92,7 +92,7 @@ Update_Scripts() {
 
   # Download revert.sh from repository
   echo "Grabbing revert.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o revert.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/revert.sh
+  curl -H "Accept-Encoding: identity" -L -o revert.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/revert.sh
   chmod +x revert.sh
   sed -i "s:dirname:$DirName:g" revert.sh
   sed -i "s:servername:$ServerName:g" revert.sh
@@ -101,7 +101,7 @@ Update_Scripts() {
 
   # Download clean.sh from repository
   echo "Grabbing clean.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o clean.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/clean.sh
+  curl -H "Accept-Encoding: identity" -L -o clean.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/clean.sh
   chmod +x clean.sh
   sed -i "s:dirname:$DirName:g" clean.sh
   sed -i "s:servername:$ServerName:g" clean.sh
@@ -110,7 +110,7 @@ Update_Scripts() {
 
   # Download update.sh from repository
   echo "Grabbing update.sh from repository..."
-  curl -H "Accept-Encoding: identity" -L -o update.sh https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/update.sh
+  curl -H "Accept-Encoding: identity" -L -o update.sh https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/update.sh
   chmod +x update.sh
   sed -i "s<pathvariable<$PATH<g" update.sh
 }
@@ -118,7 +118,7 @@ Update_Scripts() {
 Update_Service() {
   # Update minecraft server service
   echo "Configuring Minecraft $ServerName service..."
-  sudo curl -H "Accept-Encoding: identity" -L -o /etc/systemd/system/$ServerName.service https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/minecraftbe.service
+  sudo curl -H "Accept-Encoding: identity" -L -o /etc/systemd/system/$ServerName.service https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/minecraftbe.service
   sudo chmod +x /etc/systemd/system/$ServerName.service
   sudo sed -i "s:userxname:$UserName:g" /etc/systemd/system/$ServerName.service
   sudo sed -i "s:dirname:$DirName:g" /etc/systemd/system/$ServerName.service
@@ -142,7 +142,7 @@ Update_Service() {
     echo -n "Automatically restart and backup server at 4am daily (y/n)?"
     read answer </dev/tty
     if [[ "$answer" != "${answer#[Yy]}" ]]; then
-      croncmd="$DirName/minecraftbe/$ServerName/restart.sh 2>&1"
+      croncmd="$DirName/bedrock-server/$ServerName/restart.sh 2>&1"
       cronjob="0 4 * * * $croncmd"
       (
         crontab -l | grep -v -F "$croncmd"
@@ -191,25 +191,25 @@ Check_Dependencies() {
     sudo DEBIAN_FRONTEND=noninteractive apt-get install libcrypt1 -yqq
 
     # Install libssl 1.1 if available
-    SSLVer=$(apt-cache show libssl1.1 | grep Version | awk 'NR==1{ print $2 }')
-    if [[ "$SSLVer" ]]; then
-      sudo DEBIAN_FRONTEND=noninteractive apt-get install libssl1.1 -yqq
-    else
-      CPUArch=$(uname -m)
-      if [[ "$CPUArch" == *"x86_64"* ]]; then
-        echo "No libssl1.1 available in repositories -- attempting manual install"
+    #SSLVer=$(apt-cache show libssl1.1 | grep Version | awk 'NR==1{ print $2 }')
+    #if [[ "$SSLVer" ]]; then
+    #  sudo DEBIAN_FRONTEND=noninteractive apt-get install libssl1.1 -yqq
+    #else
+    #  CPUArch=$(uname -m)
+    #  if [[ "$CPUArch" == *"x86_64"* ]]; then
+    #    echo "No libssl1.1 available in repositories -- attempting manual install"
 
-        sudo curl -o libssl.deb -k -L https://github.com/TheRemote/Legendary-Bedrock-Container/raw/main/libssl1-1.deb
-        sudo dpkg -i libssl.deb
-        sudo rm libssl.deb
-        SSLVer=$(apt-cache show libssl1.1 | grep Version | awk 'NR==1{ print $2 }')
-        if [[ "$SSLVer" ]]; then
-          echo "Manual libssl1.1 installation successful!"
-        else
-          echo "Manual libssl1.1 installation failed."
-        fi
-      fi
-    fi
+    #    sudo curl -o libssl.deb -k -L https://github.com/TheRemote/Legendary-Bedrock-Container/raw/main/libssl1-1.deb
+    #    sudo dpkg -i libssl.deb
+    #    sudo rm libssl.deb
+    #    SSLVer=$(apt-cache show libssl1.1 | grep Version | awk 'NR==1{ print $2 }')
+    #    if [[ "$SSLVer" ]]; then
+    #      echo "Manual libssl1.1 installation successful!"
+    #    else
+    #      echo "Manual libssl1.1 installation failed."
+    #    fi
+    #  fi
+    #fi
 
     # Double check curl since libcurl dependency issues can sometimes remove it
     if ! command -v curl &>/dev/null; then sudo DEBIAN_FRONTEND=noninteractive apt-get install curl -yqq; fi
@@ -223,7 +223,7 @@ Update_Server() {
   # Retrieve latest version of Minecraft Bedrock dedicated server
   echo "Checking for the latest version of Minecraft Bedrock server..."
   curl -H "Accept-Encoding: identity" -H "Accept-Language: en" -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.33 (KHTML, like Gecko) Chrome/90.0.$RandNum.212 Safari/537.33" -o downloads/version.html https://minecraft.net/en-us/download/server/bedrock/
-  DownloadURL=$(grep -o 'https://minecraft.azureedge.net/bin-linux/[^"]*' downloads/version.html)
+  DownloadURL=$(grep -o 'https://www.minecraft.net/bedrockdedicatedserver/bin-linux/[^"]*' downloads/version.html)
   DownloadFile=$(echo "$DownloadURL" | sed 's#.*/##')
   echo "$DownloadURL"
   echo "$DownloadFile"
@@ -273,14 +273,14 @@ Check_Architecture() {
     fi
 
     # Retrieve depends.zip from GitHub repository
-    curl -H "Accept-Encoding: identity" -L -o depends.zip https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/depends.zip
+    curl -H "Accept-Encoding: identity" -L -o depends.zip https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/depends.zip
     unzip depends.zip
     sudo mkdir /lib64
     # Create soft link ld-linux-x86-64.so.2 mapped to ld-2.31.so, ld-2.33.so, ld-2,35.so
     sudo rm -rf /lib64/ld-linux-x86-64.so.2
-    sudo ln -s $DirName/minecraftbe/$ServerName/ld-2.31.so /lib64/ld-linux-x86-64.so.2
-    sudo ln -s $DirName/minecraftbe/$ServerName/ld-2.33.so /lib64/ld-linux-x86-64.so.2
-    sudo ln -s $DirName/minecraftbe/$ServerName/ld-2.35.so /lib64/ld-linux-x86-64.so.2
+    sudo ln -s $DirName/bedrock-server/$ServerName/ld-2.31.so /lib64/ld-linux-x86-64.so.2
+    sudo ln -s $DirName/bedrock-server/$ServerName/ld-2.33.so /lib64/ld-linux-x86-64.so.2
+    sudo ln -s $DirName/bedrock-server/$ServerName/ld-2.35.so /lib64/ld-linux-x86-64.so.2
   elif [[ "$CPUArch" == *"arm"* ]]; then
     # ARM architecture detected -- download QEMU and dependency libraries
     echo "WARNING: ARM 32 platform detected -- This is not recommended.  64 bit ARM (aarch64) can use Box64 for emulation.  It is recommended to upgrade to a 64 bit OS."
@@ -303,14 +303,14 @@ Check_Architecture() {
     fi
 
     # Retrieve depends.zip from GitHub repository
-    curl -H "Accept-Encoding: identity" -L -o depends.zip https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/depends.zip
+    curl -H "Accept-Encoding: identity" -L -o depends.zip https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/depends.zip
     unzip depends.zip
     sudo mkdir /lib64
     # Create soft link ld-linux-x86-64.so.2 mapped to ld-2.31.so, ld-2.33.so, ld-2,35.so
     sudo rm -rf /lib64/ld-linux-x86-64.so.2
-    sudo ln -s $DirName/minecraftbe/$ServerName/ld-2.31.so /lib64/ld-linux-x86-64.so.2
-    sudo ln -s $DirName/minecraftbe/$ServerName/ld-2.33.so /lib64/ld-linux-x86-64.so.2
-    sudo ln -s $DirName/minecraftbe/$ServerName/ld-2.35.so /lib64/ld-linux-x86-64.so.2
+    sudo ln -s $DirName/bedrock-server/$ServerName/ld-2.31.so /lib64/ld-linux-x86-64.so.2
+    sudo ln -s $DirName/bedrock-server/$ServerName/ld-2.33.so /lib64/ld-linux-x86-64.so.2
+    sudo ln -s $DirName/bedrock-server/$ServerName/ld-2.35.so /lib64/ld-linux-x86-64.so.2
   fi
 
   # Check for x86 (32 bit) architecture
@@ -323,11 +323,11 @@ Check_Architecture() {
 
 Update_Sudoers() {
   if [ -d /etc/sudoers.d ]; then
-    sudoline="$UserName ALL=(ALL) NOPASSWD: /bin/bash $DirName/minecraftbe/$ServerName/fixpermissions.sh -a, /bin/systemctl start $ServerName, /bin/bash $DirName/minecraftbe/$ServerName/start.sh"
-    if [ -e /etc/sudoers.d/minecraftbe ]; then
-      AddLine=$(sudo grep -qxF "$sudoline" /etc/sudoers.d/minecraftbe || echo "$sudoline" | sudo tee -a /etc/sudoers.d/minecraftbe)
+    sudoline="$UserName ALL=(ALL) NOPASSWD: /bin/bash $DirName/bedrock-server/$ServerName/fixpermissions.sh -a, /bin/systemctl start $ServerName, /bin/bash $DirName/bedrock-server/$ServerName/start.sh"
+    if [ -e /etc/sudoers.d/bedrock-server ]; then
+      AddLine=$(sudo grep -qxF "$sudoline" /etc/sudoers.d/bedrock-server || echo "$sudoline" | sudo tee -a /etc/sudoers.d/bedrock-server)
     else
-      AddLine=$(echo "$sudoline" | sudo tee /etc/sudoers.d/minecraftbe)
+      AddLine=$(echo "$sudoline" | sudo tee /etc/sudoers.d/bedrock-server)
     fi
   else
     echo "/etc/sudoers.d was not found on your system.  Please add this line to sudoers using sudo visudo:  $sudoline"
@@ -345,7 +345,7 @@ fi
 if [ -e "SetupMinecraft.sh" ]; then
   rm -f "SetupMinecraft.sh"
   echo "Local copy of SetupMinecraft.sh running.  Exiting and running online version..."
-  curl https://raw.githubusercontent.com/TheRemote/MinecraftBedrockServer/master/SetupMinecraft.sh | bash
+  curl https://raw.githubusercontent.com/nexusnetwork23/MinecraftBedrockServer/master/SetupMinecraft.sh | bash
   exit 1
 fi
 
@@ -353,24 +353,24 @@ Check_Dependencies
 
 # Check to see if Minecraft server main directory already exists
 cd $DirName
-if [ ! -d "minecraftbe" ]; then
-  mkdir minecraftbe
-  cd minecraftbe
+if [ ! -d "bedrock-server" ]; then
+  mkdir bedrock-server
+  cd bedrock-server
 else
-  cd minecraftbe
+  cd bedrock-server
   if [ -f "bedrock_server" ]; then
-    echo "Migrating old Bedrock server to minecraftbe/old"
+    echo "Migrating old Bedrock server to bedrock-server/old"
     cd $DirName
-    mv minecraftbe old
-    mkdir minecraftbe
-    mv old minecraftbe/old
-    cd minecraftbe
-    echo "Migration complete to minecraftbe/old"
+    mv bedrock-server old
+    mkdir bedrock-server
+    mv old bedrock-server/old
+    cd bedrock-server
+    echo "Migration complete to bedrock-server/old"
   fi
 fi
 
 # Server name configuration
-echo "Enter a short one word label for a new or existing server (don't use minecraftbe)..."
+echo "Enter a short one word label for a new or existing server (don't use bedrock-server)..."
 echo "It will be used in the folder name and service name..."
 
 read_with_prompt ServerName "Server Label"
@@ -378,8 +378,8 @@ read_with_prompt ServerName "Server Label"
 # Remove non-alphanumeric characters from ServerName
 ServerName=$(echo "$ServerName" | tr -cd '[a-zA-Z0-9]._-')
 
-if [[ "$ServerName" == *"minecraftbe"* ]]; then
-  echo "Server label of minecraftbe is not allowed.  Please choose a different server label!"
+if [[ "$ServerName" == *"bedrock-server"* ]]; then
+  echo "Server label of bedrock-server is not allowed.  Please choose a different server label!"
   exit 1
 fi
 
@@ -390,14 +390,14 @@ echo "Enter server IPV6 port (default 19133): "
 read_with_prompt PortIPV6 "Server IPV6 Port" 19133
 
 if [ -d "$ServerName" ]; then
-  echo "Directory minecraftbe/$ServerName already exists!  Updating scripts and configuring service ..."
+  echo "Directory bedrock-server/$ServerName already exists!  Updating scripts and configuring service ..."
 
   # Get username
   UserName=$(whoami)
   cd $DirName
-  cd minecraftbe
+  cd bedrock-server
   cd $ServerName
-  echo "Server directory is: $DirName/minecraftbe/$ServerName"
+  echo "Server directory is: $DirName/bedrock-server/$ServerName"
 
   # Update Minecraft server scripts
   Update_Scripts
@@ -420,9 +420,9 @@ if [ -d "$ServerName" ]; then
 fi
 
 # Create server directory
-echo "Creating minecraft server directory ($DirName/minecraftbe/$ServerName)..."
+echo "Creating minecraft server directory ($DirName/bedrock-server/$ServerName)..."
 cd $DirName
-cd minecraftbe
+cd bedrock-server
 mkdir $ServerName
 cd $ServerName
 mkdir downloads
