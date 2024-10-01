@@ -16,11 +16,11 @@ else
 fi
 
 echo "Taking ownership of all server files/folders in dirname/minecraftbe/servername..."
-sudo -n chown -R userxname dirname/minecraftbe/servername
-sudo -n chmod -R 755 dirname/minecraftbe/servername/*.sh
-if [ -e dirname/minecraftbe/servername/bedrock_server ]; then
-  sudo -n chmod 755 dirname/minecraftbe/servername/bedrock_server
-  sudo -n chmod +x dirname/minecraftbe/servername/bedrock_server
+sudo -n chown -R userxname dirname/bedrock-server/servername
+sudo -n chmod -R 755 dirname/bedrock-server/servername/*.sh
+if [ -e dirname/v/servername/bedrock_server ]; then
+  sudo -n chmod 755 dirnamebedrock-server/servername/bedrock_server
+  sudo -n chmod +x dirname/bedrock-server/servername/bedrock_server
 fi
 
 echo "Complete"
