@@ -4,10 +4,10 @@ After=network-online.target
 
 [Service]
 User=userxname
-WorkingDirectory=dirname/minecraftbe/servername
+WorkingDirectory=dirname/bedrock-server/servername
 Type=forking
-ExecStart=/bin/bash dirname/minecraftbe/servername/start.sh
-ExecStop=/bin/bash dirname/minecraftbe/servername/stop.sh
+ExecStart=/bin/bash dirname/bedrock-server/servername/start.sh
+ExecStop=/bin/bash dirname/bedrock-server/servername/stop.sh
 GuessMainPID=no
 TimeoutStartSec=1800
 
